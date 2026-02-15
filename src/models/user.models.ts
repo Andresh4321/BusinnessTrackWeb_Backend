@@ -2,12 +2,15 @@ import mongoose, { Document, Schema } from "mongoose";
 import { UserType } from "../types/user.type";
 const UserSchema: Schema = new Schema(
     {
-        firstName: { type: String },
-        lastName: { type: String },
+        fullname: { type: String },
         email: { type: String, required: true, unique: true },
-        username: { type: String, required: true, unique: true },
+        phone_number: { type: String, unique: true, sparse: true },
         password: { type: String, required: true },
-        role: { type: String, enum: ['user', 'admin'], default: 'user' }
+        role: { type: String, enum: ['user', 'admin'], default: 'user' },
+        profileImage: { type: String },
+        resetPasswordToken: { type: String },
+        resetPasswordExpire: { type: Date },
+
     },
     {
         timestamps: true, 
@@ -17,5 +20,7 @@ export interface IUser extends UserType, Document{
     _id: mongoose.Types.ObjectId; 
     createdAt: Date;
     updatedAt: Date;
+    resetPasswordToken?: string;
+    resetPasswordExpire?: Date;
 }
 export const UserModel = mongoose.model<IUser>('User', UserSchema);

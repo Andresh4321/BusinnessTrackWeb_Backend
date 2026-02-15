@@ -1,5 +1,5 @@
 import multer from "multer";
-import uuid from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 import path from "path";
 import fs from "fs";
 import { HttpError } from "../errors/http_error";
@@ -14,14 +14,14 @@ const storage = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = uuid.v4();
+        const uniqueSuffix = uuidv4();
         const extension = path.extname(file.originalname);
         cb(null, uniqueSuffix + extension);
     }
 });
 
 const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
     if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
@@ -32,7 +32,7 @@ const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.
 export const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5 MB limit
+    limits: { fileSize: 2 * 1024 * 1024 } // 2 MB limit
 });
 
 export const uploads = {
@@ -50,7 +50,7 @@ if (!fs.existsSync(itemPhotosDir)) {
 const itemPhotosStorage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, itemPhotosDir),
     filename: (req, file, cb) => {
-        const unique = uuid.v4();
+        const unique = uuidv4();
         const ext = path.extname(file.originalname);
         cb(null, `${unique}${ext}`);
     },
@@ -59,5 +59,5 @@ const itemPhotosStorage = multer.diskStorage({
 export const itemsUpload = multer({
     storage: itemPhotosStorage,
     fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 },
+    limits: { fileSize: 2 * 1024 * 1024 },
 });
