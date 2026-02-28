@@ -1,11 +1,11 @@
-import { RegisterDTO, LoginDto , UpdateUserDto, AdminLoginDto } from "../dtos/user.dto";
+import { RegisterDTO, LoginDto , UpdateUserDto, AdminLoginDto } from "../../dtos/auth/user.dto";
 import z from "zod";
 import { Request, Response } from "express";
-import { AuthService } from "../services/auth.service";
+import { AuthService } from "../../services/auth/auth.service";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
-import { UserModel } from "../models/user.models";
+import { UserModel } from "../../models/auth/user.models";
 let authService = new AuthService();
 export class AuthController{
     async registerUser(req: Request, res: Response){

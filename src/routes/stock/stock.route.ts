@@ -8,8 +8,8 @@ const stockController = new StockController();
 router.use(authorizedMiddelWare);
 
 router.post('/', stockController.createStockTransaction);
-router.get('/', stockController.getAllStockTransactions);
 router.get('/current', stockController.getCurrentStock);
+router.get('/', stockController.getAllStockTransactions);
 router.get('/:id', stockController.getStockTransactionById);
 router.put('/:id', stockController.updateStockTransactionById);
 router.delete('/:id', stockController.deleteStockTransactionById);

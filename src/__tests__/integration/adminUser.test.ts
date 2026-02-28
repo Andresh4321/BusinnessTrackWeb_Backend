@@ -4,7 +4,7 @@ import request from "supertest";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import app from "../../app"; // make sure your app export is named 'app'
-import { UserModel } from "../../models/user.models";
+import { UserModel } from "../../models/auth/user.models";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET,MONGO_URI } from "../../config";
 

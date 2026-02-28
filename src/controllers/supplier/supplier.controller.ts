@@ -6,7 +6,11 @@ let supplierService = new SupplierService();
 export class SupplierController{
     async createSupplier(req: Request, res: Response){
         try{
-            const newSupplier = await supplierService.createSupplier(req.body);
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            const newSupplier = await supplierService.createSupplier({...req.body, user: userId});
             return res.status(201).json(
                 { success: true, data: newSupplier, message: "Supplier created successfully" }
             )
@@ -18,7 +22,11 @@ export class SupplierController{
     }
     async getSupplierById(req: Request, res: Response){
         try{
-            const supplier = await supplierService.getSupplierById(req.params.id);
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            const supplier = await supplierService.getSupplierById(req.params.id, userId);
             return res.status(200).json(
                 { success: true, data: supplier, message: "Supplier retrieved successfully" }
             )
@@ -29,49 +37,32 @@ export class SupplierController{
             )
         }
     }
-    async getSupplierByEmail(req: Request, res: Response){
+    async getAllSuppliers(req: Request, res: Response){
         try{
-            const supplier = await supplierService.getSupplierByEmail(req.params.email);
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const { suppliers, total } = await supplierService.getAllSuppliers(userId, page, limit);
             return res.status(200).json(
-                { success: true, data: supplier, message: "Supplier retrieved successfully" }
+                { success: true, data: suppliers, total, page, totalPages: Math.ceil(total / limit), message: "Suppliers retrieved successfully" }
             )
-        }
+        }       
         catch(error: Error | any){
             return res.status(error.statusCode || 500).json(
                 { success: false, message: error.message || "Internal Server Error" }
             )
         }
     }
-    async getSupplierByName(req: Request, res: Response){
-        try{
-            const supplier = await supplierService.getSupplierByName(req.params.name);
-            return res.status(200).json(
-                { success: true, data: supplier, message: "Supplier retrieved successfully" }
-            )
-        }
-        catch(error: Error | any){
-            return res.status(error.statusCode || 500).json(
-                { success: false, message: error.message || "Internal Server Error" }
-            )
-        }
-    }
-    async getSupplierByProduct(req: Request, res: Response){
-        try{
-            const suppliers = await supplierService.getSupplierByProduct(req.params.product);
-            return res.status(200).json(
-                { success: true, data: suppliers, message: "Suppliers retrieved successfully" }
-            )
-        }
-        catch(error: Error | any){
-            return res.status(error.statusCode || 500).json(
-                { success: false, message: error.message || "Internal Server Error" }
-            )
-        }
-    }
-
     async updateSupplierById(req: Request, res: Response){
         try{
-            const updatedSupplier = await supplierService.updateSupplierById(req.params.id, req.body);
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            const updatedSupplier = await supplierService.updateSupplierById(req.params.id, userId, req.body);
             return res.status(200).json(
                 { success: true, data: updatedSupplier, message: "Supplier updated successfully" }
             )
@@ -83,29 +74,17 @@ export class SupplierController{
         }
     }
     async deleteSupplierById(req: Request, res: Response){
-        try{    
-            await supplierService.deleteSupplierById(req.params.id);
+        try{
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            await supplierService.deleteSupplierById(req.params.id, userId);
             return res.status(200).json(
                 { success: true, message: "Supplier deleted successfully" }
             )
         }
         catch(error: Error | any){
-            return res.status(error.statusCode || 500).json(
-                { success: false, message: error.message || "Internal Server Error" }
-            )
-        }
-    }
-    async getAllSuppliers(req: Request, res: Response){
-        try{
-            const page = parseInt(req.query.page as string) || 1;
-            const limit = parseInt(req.query.limit as string) || 10;
-            const { suppliers, total } = await supplierService.getAllSuppliers(page, limit);
-            return res.status(200).json(
-                { success: true, data: suppliers, total, page, totalPages: Math.ceil(total / limit), message: "Suppliers retrieved successfully" }
-            )
-
-        }       
-            catch(error: Error | any){
             return res.status(error.statusCode || 500).json(
                 { success: false, message: error.message || "Internal Server Error" }
             )

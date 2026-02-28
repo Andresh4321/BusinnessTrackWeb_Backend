@@ -61,6 +61,29 @@ export class RecipeController {
         }
     }
 
+    async update(req: Request, res: Response) {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            
+            const { id } = req.params;
+            const updatedRecipe = await recipeService.updateRecipe(id, userId, req.body);
+            
+            if (!updatedRecipe) {
+                return res.status(404).json({ success: false, message: "Recipe not found" });
+            }
+            
+            return res.status(200).json({ success: true, data: updatedRecipe, message: "Recipe updated successfully" });
+        } catch (error: Error | any) {
+            return res.status(error.statusCode || 500).json({ 
+                success: false, 
+                message: error.message || "Internal Server Error" 
+            });
+        }
+    }
+
     async delete(req: Request, res: Response) {
         try {
             const userId = req.user?.id;

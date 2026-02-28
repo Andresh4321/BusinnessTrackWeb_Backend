@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { UserType } from "../types/user.type";
+import { UserType } from "../../types/auth/user.type";
 const UserSchema: Schema = new Schema(
     {
         fullname: { type: String },
@@ -16,8 +16,15 @@ const UserSchema: Schema = new Schema(
         timestamps: true, 
     }
 )
+
+// Add virtual for id
+UserSchema.virtual('id').get(function(this: any) {
+    return this._id.toString();
+});
+
 export interface IUser extends UserType, Document{ 
-    _id: mongoose.Types.ObjectId; 
+    _id: mongoose.Types.ObjectId;
+    id: string;
     createdAt: Date;
     updatedAt: Date;
     resetPasswordToken?: string;

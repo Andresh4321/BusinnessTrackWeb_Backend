@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken"
 import { JWT_SECRET } from "../config";
-import { UserRepository } from "../repositories/auth.respository";
+import { UserRepository } from "../repositories/auth/auth.respository";
 import { UserInfo } from "node:os";
 import { HttpError } from "../errors/http_error";
-import { UserType } from "../types/user.type";
-import { IUser } from "../models/user.models";
+import { UserType } from "../types/auth/user.type";
+import { IUser } from "../models/auth/user.models";
 
 
 let userRepository = new UserRepository();

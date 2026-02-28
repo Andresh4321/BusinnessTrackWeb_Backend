@@ -1,9 +1,9 @@
-import { RegisterDTO, LoginDto, UpdateUserDto, AdminLoginDTO } from "../dtos/user.dto";
+import { RegisterDTO, LoginDto, UpdateUserDto, AdminLoginDTO } from "../../dtos/auth/user.dto";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
-import { HttpError } from "../errors/http_error";
-import { UserRepository } from "../repositories/auth.respository";
+import { JWT_SECRET } from "../../config";
+import { HttpError } from "../../errors/http_error";
+import { UserRepository } from "../../repositories/auth/auth.respository";
 
 let userRepository = new UserRepository();
 export class AuthService{

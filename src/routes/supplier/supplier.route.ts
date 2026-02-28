@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { SupplierController } from "../../controllers/supplier/supplier.controller";
+import SupplierController from "../../controllers/supplier/supplier.controller";
+import { authorizedMiddelWare } from "../../middleware/authorized.middleware";
 
 const router = Router();
 const supplierController = new SupplierController();
+
+router.use(authorizedMiddelWare);
 
 // Create supplier
 router.post('/', supplierController.createSupplier);
@@ -12,15 +15,6 @@ router.get('/', supplierController.getAllSuppliers);
 
 // Get supplier by ID
 router.get('/:id', supplierController.getSupplierById);
-
-// Get supplier by email
-router.get('/email/:email', supplierController.getSupplierByEmail);
-
-// Get supplier by name
-router.get('/name/:name', supplierController.getSupplierByName);
-
-// Get suppliers by product
-router.get('/product/:product', supplierController.getSupplierByProduct);
 
 // Update supplier
 router.put('/:id', supplierController.updateSupplierById);

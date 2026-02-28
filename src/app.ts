@@ -2,10 +2,16 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import { connectDB } from './database/db';
 import { PORT } from './config';
-import authRoutes from "./routes/auth.route";
+import authRoutes from "./routes/auth/auth.route";
 import cors from 'cors';
 import path from "path";
 import adminUserRoutes from './routes/admin/user.route';
+import supplierRoutes from './routes/supplier/supplier.route';
+import materialRoutes from './routes/material/material.route';
+import stockRoutes from './routes/stock/stock.route';
+import billRoutes from './routes/BillofMaterials/bill.route';
+import recipeRoutes from './routes/ingredients/ingredients.route';
+import productionRoutes from './routes/production/production.route';
 
 const app: Application = express();
 
@@ -22,14 +28,31 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Mount admin user routes under /api/admin/users (router defines "/" and "/:id")
-app.use('/api/admin/users', adminUserRoutes);
-console.log('Admin user routes mounted at /api/admin/users');
 
-// quick test endpoint for Postman to verify admin user routes are reachable
-app.get('/api/admin/users/test', (req: Request, res: Response) => {
-    return res.status(200).json({ success: true, message: 'Admin users test route OK' });
-});
+
+// Mount auth routes
+app.use('/api/auth', authRoutes);
+
+// Mount admin user routes
+app.use('/api/admin/users', adminUserRoutes);
+
+// Mount material routes
+app.use('/api/materials', materialRoutes);
+
+// Mount stock routes
+app.use('/api/stock', stockRoutes);
+
+// Mount bill of materials routes
+app.use('/api/bill-of-materials', billRoutes);
+
+// Mount recipe/ingredients routes
+app.use('/api/recipes', recipeRoutes);
+
+// Mount production routes
+app.use('/api/production', productionRoutes);
+
+// Mount supplier routes
+app.use('/api/suppliers', supplierRoutes);
 
 // serve uploads and public item photos
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
@@ -38,11 +61,22 @@ app.use('/public/items_photos',
   express.static(path.join(__dirname, '../public/item_photos'))
 );
 
-
-
-app.use('/api/auth', authRoutes);
 app.get('/', (req: Request, res: Response) => {
-    return res.status(200).json({ success: "true", message: "Welcome to the API" });
+    return res.status(200).json({ 
+        success: true, 
+        message: "Welcome to Business Track API",
+        version: "1.0.0",
+        endpoints: {
+            auth: "/api/auth",
+            materials: "/api/materials",
+            stock: "/api/stock",
+            billOfMaterials: "/api/bill-of-materials",
+            recipes: "/api/recipes",
+            production: "/api/production",
+            suppliers: "/api/suppliers",
+            admin: "/api/admin/users"
+        }
+    });
 });
 
 // 404 handler
