@@ -8,6 +8,7 @@ export  interface ISupplierRepository{
     getSupplierById(id: string): Promise<ISupplier | null>;
     getSupplierByIdAndUser(id: string, userId: string): Promise<ISupplier | null>;
     getSupplierByProduct(product: string): Promise<ISupplier[] | null>;
+    getSupplierByProductAndUser(product: string, userId: string): Promise<ISupplier[] | null>;
     deleteSupplierbyId(id: string): Promise<boolean>;
     deleteSupplierbyIdAndUser(id: string, userId: string): Promise<boolean>;
     updateSupplierById(id: string, data: Partial<ISupplier>): Promise<ISupplier | null>;
@@ -44,6 +45,10 @@ export class SupplierRepository implements ISupplierRepository{
     }
     async getSupplierByProduct(product: string){
         const suppliers = await SupplierModel.find({ products: product });
+        return suppliers.length > 0 ? suppliers : null;
+    }
+    async getSupplierByProductAndUser(product: string, userId: string){
+        const suppliers = await SupplierModel.find({ products: { $regex: product, $options: 'i' }, user: userId });
         return suppliers.length > 0 ? suppliers : null;
     }
     async deleteSupplierbyId(id: string){

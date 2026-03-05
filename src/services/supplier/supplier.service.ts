@@ -47,5 +47,9 @@ export class SupplierService{
         const { suppliers, total } = await supplierRepository.getAllSuppliersByUser(userId, page, limit);
         return { suppliers, total };
     }
+    async getSuppliersByProduct(product: string, userId: string){
+        const suppliers = await supplierRepository.getSupplierByProductAndUser(product, userId);
+        return suppliers || [];
+    }
 }
 

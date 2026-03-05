@@ -90,6 +90,27 @@ export class SupplierController{
             )
         }
     }
+    async getSuppliersByProduct(req: Request, res: Response){
+        try{
+            const userId = req.user?.id;
+            if (!userId) {
+                return res.status(401).json({ success: false, message: "Unauthorized" });
+            }
+            const product = req.query.product as string;
+            if (!product) {
+                return res.status(400).json({ success: false, message: "Product parameter is required" });
+            }
+            const suppliers = await supplierService.getSuppliersByProduct(product, userId);
+            return res.status(200).json(
+                { success: true, data: suppliers, message: "Suppliers retrieved successfully" }
+            )
+        }
+        catch(error: Error | any){
+            return res.status(error.statusCode || 500).json(
+                { success: false, message: error.message || "Internal Server Error" }
+            )
+        }
+    }
 }
 export default SupplierController;
 

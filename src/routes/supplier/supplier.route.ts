@@ -13,6 +13,9 @@ router.post('/', supplierController.createSupplier);
 // Get all suppliers with pagination
 router.get('/', supplierController.getAllSuppliers);
 
+// Get suppliers by product (must be before /:id to avoid matching)
+router.get('/by-product/search', supplierController.getSuppliersByProduct);
+
 // Get supplier by ID
 router.get('/:id', supplierController.getSupplierById);
 

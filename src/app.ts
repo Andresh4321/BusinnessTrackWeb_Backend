@@ -12,6 +12,7 @@ import stockRoutes from './routes/stock/stock.route';
 import billRoutes from './routes/BillofMaterials/bill.route';
 import recipeRoutes from './routes/ingredients/ingredients.route';
 import productionRoutes from './routes/production/production.route';
+import messageRoutes from './routes/messaging/message.route';
 
 const app: Application = express();
 
@@ -54,6 +55,9 @@ app.use('/api/production', productionRoutes);
 // Mount supplier routes
 app.use('/api/suppliers', supplierRoutes);
 
+// Mount messaging routes
+app.use('/api/messages', messageRoutes);
+
 // serve uploads and public item photos
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/items/photos', express.static(path.join(__dirname, '../public/item_photos')));
@@ -74,6 +78,7 @@ app.get('/', (req: Request, res: Response) => {
             recipes: "/api/recipes",
             production: "/api/production",
             suppliers: "/api/suppliers",
+            messages: "/api/messages",
             admin: "/api/admin/users"
         }
     });

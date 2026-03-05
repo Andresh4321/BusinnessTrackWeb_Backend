@@ -32,7 +32,10 @@ class ProductionService {
         const requiredQuantity = ingredient.quantity * data.batchQuantity;
 
         if (stock.quantity < requiredQuantity) {
-          throw new HttpError(400, `Not enough stock for ${(ingredient.material as any).name}`);
+          throw new HttpError(
+            400,
+            `Insufficient material: ${(ingredient.material as any).name}. Required ${requiredQuantity}, available ${stock.quantity}`
+          );
         }
 
         // 3️⃣ Decrease stock
